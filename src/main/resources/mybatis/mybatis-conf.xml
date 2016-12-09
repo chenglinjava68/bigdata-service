@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration>    
+    <!-- 在这个文件放置一些全局性的配置  -->
+    <settings>     
+        <setting name="cacheEnabled" value="false" />     
+    </settings>   
+    <!-- 配置实体类的别名，配置实体类别名的目的是为了在引用实体类时可以使用实体类的别名来代替实体类，达到简写的目的 -->
+      <!-- 为实体类me.gacl.domain.User配置一个别名_User -->
+        <!-- <typeAlias type="me.gacl.domain.User" alias="_User"/> -->
+        <!-- 为me.gacl.domain包下的所有实体类配置别名，MyBatis默认的设置别名的方式就是去除类所在的包后的简单的类名比如me.gacl.domain.User这个实体类的别名就会被设置成User -->
+   <typeAliases>  
+    <package name="cn.com.enersun.data_center.bigdata_service.entity"/>
+      <!--  <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.ServiceParameter" alias="ServiceParameter"/>
+       <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.AssetInfo" alias="AssetInfo"/>
+       <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.AttributeBase" alias="AttributeBase"/>
+       <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.Terminal" alias="Terminal"/>
+       <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.Theme" alias="Theme"/>
+       <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.ThemeInfo" alias="ThemeInfo"/>
+       <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.ThemeTypeAttributeInfo" alias="ThemeTypeAttributeInfo"/>
+       <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.TopicType" alias="TopicType"/>
+       <typeAlias type="cn.com.enersun.data_center.bigdata_service.entity.Monitor" alias="Monitor"/>
+       -->
+   </typeAliases> 
+   
+    <!-- 以下内容不再需要手动配置  已经自动映射 -->  
+    <mappers>     
+        <!-- <mapper resource="cn/com/enersun/data_center/bigdata_service/mapper/TestuserMapper.xml" /> -->  
+    </mappers>    
+      
+</configuration> 

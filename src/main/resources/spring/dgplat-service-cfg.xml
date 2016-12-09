@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:dgplat="http://code.alibabatech.com/schema/dubbo"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+	http://code.alibabatech.com/schema/dubbo
+	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+	<!--此service工程的唯一标识码 -->
+	<dgplat:application name="${providerAppCode}" />
+	
+	<!--使用zookeeper注册中心暴露服务地址 -->
+	<dgplat:registry protocol="zookeeper" address="${zookeeperAddress}"   />
+	 
+	<!--
+		providerPort:端口(默认端口是20880)，自行修改成不同端口，避免冲突
+		providerHost:部署这个service工程的服务器的IP地址-->
+	<dgplat:protocol name="dubbo" port="${providerPort}" host="${providerHost}" payload="104857600"/> 
+	
+	<dgplat:protocol name="webservice" port="${webServerPort}" server="servlet" />
+	
+	<!-- 监控中心配置 -->
+	<!-- 监控中心协议，如果为protocol="registry"，表示从注册中心发现监控中心地址，否则直连监控中心 -->
+	<!-- 直连监控中心服务器地址，如：address="10.111.58.168:2161" -->
+	<dgplat:monitor protocol="registry"/>
+	
+	<!--说明: 该文件可以不用改动，providerHost、providerPort、webServerPort请到 common.properties 中修改-->  
+</beans>

@@ -1,0 +1,52 @@
+{
+	// demo模块
+	"demo" : {
+		"ORACLE" : "sqltext/demo/oracle.json",
+		"MYSQL" : "sqltext/demo/mysql.json",
+		"HQL" : "sqltext/demo/hql.json"
+	},
+	//设备台账信息模块
+	"devInfo" : {
+		"ORACLE" : "sqltext/devInfor/oracle.json",
+		"MYSQL" : "sqltext/devInfor/mysql.json",
+		"HQL" : "sqltext/devInfor/hql.json"
+	},
+	//设备缺陷信息
+	"defectInfo" : {
+		"ORACLE" : "sqltext/defectInfo/oracle.json",
+		"MYSQL" : "sqltext/defectInfo/mysql.json",
+		"HQL" : "sqltext/defectInfo/hql.json"
+	},
+	//装置统计
+	"terminalInfo":{
+		"ORACLE" : "sqltext/terminalInfo/oracle.json",
+		"MYSQL" : "sqltext/terminalInfo/mysql.json",
+		"HQL" : "sqltext/terminalInfo/hql.json"
+	},
+	
+	//监测信息
+	"monitorInfo":{
+		"ORACLE" : "sqltext/monitorInfo/oracle.json",
+		"MYSQL" : "sqltext/monitorInfo/mysql.json",
+		"HQL" : "sqltext/monitorInfo/hql.json"
+	},
+	
+	//主题实例信息
+	"themeInfo":{
+		"ORACLE" : "sqltext/themeInfo/oracle.json",
+		"MYSQL" : "sqltext/themeInfo/mysql.json",
+		"HQL" : "sqltext/themeInfo/hql.json"
+	},
+	
+	//主题类型信息
+	"topicTypeInfo":{
+		"ORACLE" : "sqltext/topicTypeInfo/oracle.json",
+		"MYSQL" : "sqltext/topicTypeInfo/mysql.json",
+		"HQL" : "sqltext/topicTypeInfo/hql.json"
+	},
+	
+	//主题类型信息
+	"microService":{
+		"ORACLE" : "sqltext/microService/oracle.json"
+	}
+}

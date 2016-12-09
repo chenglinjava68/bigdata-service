@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.com.enersun.data_center.bigdata_service.dao.MonitorServiceDao">
+
+ <!-- mapping1 -->
+ <!-- 使用resultMap映射电网设备和主题实例之间的一多对应关系 -->
+ <resultMap id="detailedAssetOfThemeResultMap" type="AssetInfoEntity">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="assetName" column="asset_name" jdbcType="VARCHAR"/>
+        <collection property="theme" ofType="ThemeEntity" column="theme_id" javaType="list" select="queryThemeById" />
+   </resultMap>
+   
+    <resultMap id="ThemeResultMap" type="ThemeEntity">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+     	<result property="themeName" column="theme_name" jdbcType="VARCHAR"/>
+        <result property="topicId" column="topic_id" jdbcType="VARCHAR"/>
+   </resultMap>
+  <!-- 查询主题实例 -->
+ <select id="queryThemeById" parameterType="string" resultMap="ThemeResultMap">
+ select t.id,t.theme_name,t.topic_id from theme_instance t where t.id=#{id}
+ </select>
+ 
+<!-- 查询主题分类 -->
+ <select id="queryTypeById" parameterType="string" resultType="TopicTypeEntity">
+ SELECT
+  p.id ,p.type_name typeName,p.TOPIC_TYPE_OWNER topicTypeOwner  from topic_type p
+  where p.id= #{id}
+ </select>
+ 
+ 
+ <!-- 根据主题实例ID,查询主题属性 -->
+ <select id="queryThemeAttributeByThemeId" parameterType="string"  resultMap="queryAllAttributeBase">
+ select * from attribute_base_lib where id in (select attribute_id from topic_attribute_map 
+ where topic_id = (select topic_id from  theme_instance where id=#{themeId}))
+ </select>
+ 
+ <resultMap id="queryAllAttributeBase" type="AttributeBaseEntity">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+     	<result property="attributeName" column="attribute_name" jdbcType="VARCHAR"/>
+        <result property="dataType" column="data_type" jdbcType="VARCHAR"/>
+        <result property="unit" column="unit" jdbcType="VARCHAR"/>
+   </resultMap>
+   
+ <!-- 查询主题属性 -->
+ <select id="queryAttibuteByTypeId" parameterType="string" resultMap="queryAllAttributeBase">  
+    select * from attribute_base_lib where id in (select p.attribute_id 
+    from topic_attribute_map p where p.topic_id=#{topicId})
+  </select> 
+
+ <!-- 根据设备ID查询电网台账 -->
+ <select id="queryThemeByAssetId"  resultMap="detailedAssetOfThemeResultMap">
+  select d.id,d.device_name asset_name,
+  (select org_name from top_organization  where org_code=d.BUREAU_CODE) as BUREAU_CODE,to_char(d.plant_transfer_date,'yyyy-mm iw-d hh:mi:ss')plant_transfer_date,
+  (select c.classify_name from dm_classify c where c.id=d.classify_id) classify_id, 
+  decode(d.ASSET_STATE,1,'运行',2,'在建',3,'报废'，4,'待投运'，5,'闲置',6,'删除'，7,'退运'，8,'备用',9,'停运',10,'带备用') as ASSET_STATE ,
+    decode(d.BASE_VOLTAGE_ID,'318','500kV','306','220kV','298','110kV','290','35kV','266','10kV') as base_voltage_id,
+  decode(d.POWER_GRID_FLAG,1,'主网',2,'配网') POWER_GRID_FLAG,t.theme_id from  dm_device d ,theme_asset_relation t where t.asset_id=d.id and t.asset_owner_table='DM_DEVICE' and  d.id=#{0}
+    union all 
+  select p.id,p.parts_name asset_name,(select org_name from top_organization  where org_code=p.BUREAU_CODE) as BUREAU_CODE,to_char(p.plant_transfer_date,'yyyy-mm iw-d hh:mi:ss')plant_transfer_date,
+  (select c.classify_name from dm_classify c where c.id=p.classify_id) classify_id,
+   decode(p.ASSET_STATE,1,'运行',2,'在建',3,'报废'，4,'待投运'，5,'闲置',6,'删除'，7,'退运'，8,'备用',9,'停运',10,'带备用') as ASSET_STATE, 
+    decode(p.BASE_VOLTAGE_ID,'318','500kV','306','220kV','298','110kV','290','35kV','266','10kV') as base_voltage_id,
+  decode(p.POWER_GRID_FLAG,1,'主网',2,'配网') POWER_GRID_FLAG, t.theme_id from  dm_parts p,theme_asset_relation t where t.asset_id=p.id and t.asset_owner_table='DM_PARTS' and  p.id=#{1}
+    union all
+  select l.id,l.fl_name  asset_name,(select c.classify_name from dm_classify c where c.id=l.classify_id) classify_id, 
+  (select org_name from top_organization  where org_code=l.BUREAU_CODE) as BUREAU_CODE,to_char(l.plant_transfer_date,'yyyy-mm iw-d hh:mi:ss') plant_transfer_date,
+   decode(l.RUNNING_STATE,1,'运行',2,'在建',3,'报废',4,'待投运',5,'闲置',6,'删除',7,'退运',8,'备用',9,'停运') as ASSET_STATE, 
+    decode(l.BASE_VOLTAGE_ID,'318','500kV','306','220kV','298','110kV','290','35kV','266','10kV') as base_voltage_id,
+  decode(l.POWER_GRID_FLAG,1,'主网',2,'配网') POWER_GRID_FLAG,t.theme_id from  dm_function_location l,theme_asset_relation t 
+  where t.asset_id=l.id and t.asset_owner_table='DM_FUNCTION_LOCATION' and  l.id=#{2}
+ </select>
+ 
+  <!-- 根据ID查询设备部件线路杆塔信息 -->
+ <select id="queryAssetInfoByAssetId"  resultType="DeviceDetailInfoEntity">
+  select d.id,d.device_name asset_name,
+  (select org_name from top_organization  where org_code=d.BUREAU_CODE) as BUREAU_CODE,to_char(d.plant_transfer_date,'yyyy-mm iw-d hh:mi:ss')plant_transfer_date,
+  (select c.classify_name from dm_classify c where c.id=d.classify_id) classify_id, 
+  decode(d.ASSET_STATE,1,'运行',2,'在建',3,'报废'，4,'待投运'，5,'闲置',6,'删除'，7,'退运'，8,'备用',9,'停运',10,'带备用') as ASSET_STATE ,
+    decode(d.BASE_VOLTAGE_ID,'318','500kV','306','220kV','298','110kV','290','35kV','266','10kV') as base_voltage_id,
+  decode(d.POWER_GRID_FLAG,1,'主网',2,'配网') POWER_GRID_FLAG  from  dm_device d where d.id=#{0}
+    union all 
+  select p.id,p.parts_name asset_name,(select org_name from top_organization  where org_code=p.BUREAU_CODE) as BUREAU_CODE,to_char(p.plant_transfer_date,'yyyy-mm iw-d hh:mi:ss')plant_transfer_date,
+  (select c.classify_name from dm_classify c where c.id=p.classify_id) classify_id,
+   decode(p.ASSET_STATE,1,'运行',2,'在建',3,'报废'，4,'待投运'，5,'闲置',6,'删除'，7,'退运'，8,'备用',9,'停运',10,'带备用') as ASSET_STATE, 
+    decode(p.BASE_VOLTAGE_ID,'318','500kV','306','220kV','298','110kV','290','35kV','266','10kV') as base_voltage_id,
+  decode(p.POWER_GRID_FLAG,1,'主网',2,'配网') POWER_GRID_FLAG from  dm_parts p where  p.id=#{1}
+    union all
+  select l.id,l.fl_name  asset_name,(select c.classify_name from dm_classify c where c.id=l.classify_id) classify_id, 
+  (select org_name from top_organization  where org_code=l.BUREAU_CODE) as BUREAU_CODE,to_char(l.plant_transfer_date,'yyyy-mm iw-d hh:mi:ss') plant_transfer_date,
+   decode(l.RUNNING_STATE,1,'运行',2,'在建',3,'报废',4,'待投运',5,'闲置',6,'删除',7,'退运',8,'备用',9,'停运') as ASSET_STATE, 
+    decode(l.BASE_VOLTAGE_ID,'318','500kV','306','220kV','298','110kV','290','35kV','266','10kV') as base_voltage_id,
+  decode(l.POWER_GRID_FLAG,1,'主网',2,'配网') POWER_GRID_FLAG from  dm_function_location l
+  where  l.id=#{2}
+ </select>
+ 
+       <!-- 使用resultMap映射主题实例和主题分类之间的一一对应关系,分类和属性一对多，属性和监测值一对多 -->
+ <resultMap id="detailedThemeOfTypeResultMap" type="ThemeTypeAttributeInfoEntity">
+        <id property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="themeName" column="theme_name" jdbcType="VARCHAR"/>
+        <result property="topicId" column="topic_id" jdbcType="VARCHAR"/>
+        <association property="topicType" column="topic_id"  javaType="TopicTypeEntity" >
+           <id property="id" column="topic_id" jdbcType="VARCHAR"/>
+           <result property="typeName" column="topic_name" jdbcType="VARCHAR"/>
+        </association>
+        <collection property="attributeBase" ofType="AttributeBaseEntity" column="topic_id" >
+           <result property="id" column="attribute_id" jdbcType="VARCHAR"/>
+           <result property="attributeName" column="attribute_name" jdbcType="VARCHAR"/>
+           <result property="dataType" column="dataType" jdbcType="VARCHAR"/>
+           <result property="unit" column="unit" jdbcType="VARCHAR"/>
+        </collection>
+   </resultMap>
+   
+   <select id="queryThemeOfTypeInfo" parameterType="string" resultMap="detailedThemeOfTypeResultMap">
+	       select a.id,
+            a.topic_id,
+            a.theme_name,
+            b.topic_name,
+            b.attribute_id,
+            b.attribute_name,
+            c.unit,
+            c.data_type
+       from theme_instance a, topic_attribute_map b,attribute_base_lib c
+      where a.topic_id = b.topic_id
+           and b.attribute_id =c.id
+         and a.id =#{id}
+ </select>
+ 
+     <!-- 使用resultMap映射主题实例和主题分类之间的一一对应关系,分类和属性一对多，属性和监测值一对多 -->
+ <resultMap id="ThemeAndTopicAttrInfoResultMap" type="ThemeInfoEntity">
+        <id property="id" column="theme_id" jdbcType="VARCHAR"/>
+        <result property="themeName" column="theme_name" jdbcType="VARCHAR"/>
+        <result property="topicId" column="topic_id" jdbcType="VARCHAR"/>
+         <!-- 主题实例和主题分类之间的一一对应关系-->
+        <association property="topicType" column="topic_id"  javaType="TopicTypeEntity" >
+           <id property="id" column="topic_id" jdbcType="VARCHAR"/>
+           <result property="typeName" column="topic_name" jdbcType="VARCHAR"/>
+        </association>
+        <!-- 分类和属性一对多，属性和监测值一对多 -->
+        <collection property="attributeAndMonitorInfoList" ofType="AttributeAndMonitorInfoEntity" column="topic_id" >
+           <result property="id" column="id" jdbcType="VARCHAR"/>
+           <result property="attributeName" column="attribute_name" jdbcType="VARCHAR"/>
+           <result property="dataType" column="data_type" jdbcType="VARCHAR"/>
+           <result property="unit" column="unit" jdbcType="VARCHAR"/>
+        <collection property="monitorDetailList" ofType="MonitorEntity">
+           <result property="id" column="theme_id" jdbcType="VARCHAR"/>
+           <result property="attrId" column="id" jdbcType="VARCHAR"/>
+        </collection>
+        </collection>
+   </resultMap>
+   
+   <select id="queryThemeAndTopicAttrInfo" parameterType="string" resultMap="ThemeAndTopicAttrInfoResultMap">
+	      select a.id,
+             a.attribute_name,
+             a.unit,
+             a.data_type,
+             m.topic_id,
+             m.topic_name,
+             t.id theme_id,
+             t.theme_name
+        from attribute_base_lib a
+        left join topic_attribute_map m
+          on a.id = m.attribute_id
+        left join theme_instance t
+          on t.topic_id = m.topic_id
+        left join theme_asset_relation r
+          on r.theme_id = t.id
+       where r.asset_id =#{assetId}
+ </select>
+ 
+  <!-- mapping2 -->
+ <!-- 使用resultMap映射终端实体类和字段之间的一一对应关系 -->
+ <resultMap id="queryForListMap" type="TerminalEntity">
+         <id property="id" column="id" jdbcType="VARCHAR"/>
+         <result property="ownerType" column="owner_type" jdbcType="VARCHAR"/>
+         <result property="terminalName" column="terminal_name" jdbcType="VARCHAR"/>
+          <result property="orgid" column="orgid" jdbcType="VARCHAR"/>
+         <result property="deviceManufacturer" column="device_manufacturer" jdbcType="VARCHAR"/>
+          <result property="status" column="status" jdbcType="VARCHAR"/>
+         <result property="terminalSpec" column="terminal_spec" jdbcType="VARCHAR"/>
+          <result property="accessWay" column="access_way" jdbcType="VARCHAR"/>
+         <result property="extSysTbId" column="ext_sys_tb_id" jdbcType="VARCHAR"/>
+          <result property="receiveFrequency" column="receive_frequency" jdbcType="NUMERIC"/>
+         <result property="lastReceiveTime" column="last_receive_time" jdbcType="DATE"/>
+   </resultMap>
+   
+ <sql id="columns2">
+f.id ,f.owner_type,f.terminal_name,f.orgid,f.device_manufacturer,f.status,
+f.terminal_spec,f.access_way ,f.ext_sys_tb_id,f.receive_frequency,f.last_receive_time 
+ </sql>
+
+ <!-- 根据电网台账ID获取终端台账 -->
+ <select id="queryTerminalByAssetId" parameterType="string" resultMap="queryForListMap">
+ select 
+   <include refid="columns2" />
+from terminal_device_info  f 
+ 	where f.id in (select t.terminal_id from theme_terminal_map t 
+ 	where  t.theme_id in (select theme_id from theme_asset_relation 
+ 	where asset_owner_table='DM_FUNCTION_LOCATION' and asset_id= #{assetId}))
+ </select>
+ 
+  <!-- mapping3-->
+
+ <!-- 查询某种类型主题实例数量 -->
+ <select id="queryThemeCountByType" parameterType="string" resultType="java.lang.Integer">
+ SELECT  count(*) from theme_instance t where topic_id=#{topicId} 
+ </select>
+  <!-- 查询某种类型终端台账数量 -->
+ <select id="queryTerminalCountByType" parameterType="string" resultType="java.lang.Integer">
+ SELECT count(*) from terminal_device_info t where t.owner_type=#{ownerType}
+ </select>
+   <!-- 电网台账查询主题实例ID -->
+ <select id="queryThemeIdByAssetId" parameterType="string" resultType="string">
+	select id from  theme_instance where id in (select t.theme_id from  theme_asset_relation t where   t.asset_id=#{assetId})
+ </select>
+ 
+ 
+  <!-- 电网台账查询主题实例ID+主题属性ID -->
+ <select id="queryThemeIdTopicIdByAssetId" parameterType="string" resultType="string">
+	select (id||topic_id) keyId from  theme_instance where id in (select t.theme_id from  theme_asset_relation t where   t.asset_id=#{assetId})
+ </select>
+ 
+ <!-- 查询主题属性 -->
+ <select id="queryAttributeIdByTypeId" parameterType="java.util.List" resultType="string">  
+  select p.attribute_id from topic_attribute_map p where p.topic_id=#{topicId}
+  </select> 
+ 
+ 
+</mapper>
