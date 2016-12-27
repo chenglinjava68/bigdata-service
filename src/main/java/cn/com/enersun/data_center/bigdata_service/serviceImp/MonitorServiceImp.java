@@ -2,8 +2,10 @@ package cn.com.enersun.data_center.bigdata_service.serviceImp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
@@ -338,7 +340,9 @@ public class MonitorServiceImp implements MonitorService{
 					try {
 						valuesMap = themeParamValueClient.getLastValuesByPrefix(key,limitrow);
 						if(valuesMap.isEmpty()) continue;
-						valueList.add(valuesMap);
+						//有序的TreeMap 代替HashMap 
+						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
+						valueList.add(sortedMap);
 					} catch (Exception e) {
 						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key,null);//string带参数，利用String.format
 						log.error(msg, e);
@@ -387,7 +391,9 @@ public class MonitorServiceImp implements MonitorService{
 					try {
 						valuesMap = themeParamValueClient.getLastValuesByPrefix(key,limitrow);
 						if(valuesMap.isEmpty()) continue;
-						valueList.add(valuesMap);
+						//有序的TreeMap 代替HashMap 
+						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
+						valueList.add(sortedMap);
 					} catch (Exception e) {
 						String msg = String.format("{error:'%s/%s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key.toString());//string带参数，利用String.format
 					    log.error(msg, e);
@@ -436,7 +442,9 @@ public class MonitorServiceImp implements MonitorService{
 					try {
 						valuesMap = themeParamValueClient.getLastValuesByPrefix(key,limitrow);
 						if(valuesMap.isEmpty()) continue;
-						valueList.add(valuesMap);
+						//有序的TreeMap 代替HashMap 
+						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
+						valueList.add(sortedMap);
 					} catch (Exception e) {
 						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByPrefix]获取数据出现异常！]", key);//string带参数，利用String.format
 					    log.error(msg, e);
@@ -491,7 +499,9 @@ public class MonitorServiceImp implements MonitorService{
 					try {
 						valuesMap = themeParamValueClient.getValuesByKey(startkey,endkey,limitrow);
 						if(valuesMap.isEmpty()) continue;
-						valueList.add(valuesMap);
+						//有序的TreeMap 代替HashMap 
+						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
+						valueList.add(sortedMap);
 					} catch (Exception e) {
 						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", startkey,endkey);//string带参数，利用String.format
 					    log.error(msg, e);
@@ -537,7 +547,9 @@ public class MonitorServiceImp implements MonitorService{
 			String key = new StringBuilder(themeId).append(attrId).append(time).toString();
 			try {
 				Map<String, String> valuesMap = themeParamValueClient.getLastValuesByPrefix(key,limitrow);
-				valueList.add(valuesMap);
+				//有序的TreeMap 代替HashMap 
+				Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
+				valueList.add(sortedMap);
 			} catch (Exception e) {
 				String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key);//string带参数，利用String.format
 			    log.error(msg, e);
@@ -666,16 +678,28 @@ public class MonitorServiceImp implements MonitorService{
 					valuesMap = themeParamValueClient.getValuesByPrefix(rowkey,limitrow);
 					Monitor monitor = null;
 					if(valuesMap.isEmpty()) continue;
-					 for (Map.Entry<String, String> entry : valuesMap.entrySet()) {
-						 monitor = new Monitor();
-						 String key = entry.getKey();
-						 String time = key.substring(key.length()-14);
-						 monitor.setId(themeId);
-						 monitor.setAttrId(attrId);
-						 monitor.setTime(time);
-						 monitor.setValue(entry.getValue());
-						 monitorDetailList.add(monitor);
+					Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
+					Iterator<String> ir=sortedMap.keySet().iterator();//获取hashMap的键值，并进行遍历
+					while(ir.hasNext()){
+						String key= ir.next();
+						monitor = new Monitor();
+						String time = key.substring(key.length()-14);
+						monitor.setId(themeId);
+						monitor.setAttrId(attrId);
+						monitor.setTime(time);
+					    monitor.setValue(sortedMap.get(key));
+						monitorDetailList.add(monitor);
 					}
+//					 for (Map.Entry<String, String> entry : valuesMap.entrySet()) {
+//						 monitor = new Monitor();
+//						 String key = entry.getKey();
+//						 String time = key.substring(key.length()-14);
+//						 monitor.setId(themeId);
+//						 monitor.setAttrId(attrId);
+//						 monitor.setTime(time);
+//						 monitor.setValue(entry.getValue());
+//						 monitorDetailList.add(monitor);
+//					}
 					 newAttributeAndMonitorList.add(new AttributeAndMonitorInfo(attrId,attributeName,dataType,unit,monitorDetailList));
 				} catch (Exception e) {
 					String msg = StringUtils.getExceptionMsg(e);
@@ -751,15 +775,28 @@ public class MonitorServiceImp implements MonitorService{
 					try {
 						valuesMap = themeParamValueClient.getLastValuesByPrefix(rowkey,1);
 						if(valuesMap.isEmpty()) continue;
-						for (Map.Entry<String, String> entry : valuesMap.entrySet()) {
+						//有序的TreeMap 代替HashMap 
+						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
+						Iterator<String> ir=sortedMap.keySet().iterator();//获取hashMap的键值，并进行遍历
+						while(ir.hasNext()){
+							String key= ir.next();
 							attributeDataObject = new AttributeDataObject();
-							String key = entry.getKey();
 							String time = key.substring(key.length()-14);
 							attributeDataObject.setAttributeName(attrName);
 							attributeDataObject.setAttrID(attrId);
 							attributeDataObject.setStrDate(time);
-							attributeDataObject.setStrValue(entry.getValue());
+							attributeDataObject.setStrValue(sortedMap.get(key));
 						}
+						
+//						for (Map.Entry<String, String> entry : valuesMap.entrySet()) {
+//							attributeDataObject = new AttributeDataObject();
+//							String key = entry.getKey();
+//							String time = key.substring(key.length()-14);
+//							attributeDataObject.setAttributeName(attrName);
+//							attributeDataObject.setAttrID(attrId);
+//							attributeDataObject.setStrDate(time);
+//							attributeDataObject.setStrValue(entry.getValue());
+//						}
 						lastAttrData.add(attributeDataObject);
 					} catch (Exception e) {
 						String msg = StringUtils.getExceptionMsg(e);
