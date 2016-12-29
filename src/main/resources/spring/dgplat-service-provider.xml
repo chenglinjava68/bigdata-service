@@ -13,14 +13,14 @@
 	http://code.alibabatech.com/schema/dubbo
 	http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
 
-	<!-- begin MicroService 的配置 -->
-	<bean id="MicroService" class="cn.com.enersun.data_center.bigdata_service.serviceImp.MicroServiceImp"/>
-	<dgplat:service interface="cn.com.enersun.data_center.bigdata_service.MicroService" ref="MicroService" version="${versionMicroService}"/>
-	<!-- end MicroService 的配置 -->
-	<!-- begin MonitorService 的配置 -->
- 	<bean id="MonitorService" class="cn.com.enersun.data_center.bigdata_service.serviceImp.MonitorServiceImp"/>
-	<dgplat:service interface="cn.com.enersun.data_center.bigdata_service.MonitorService" ref="MonitorService" version="${versionMonitorService}"/>
- 	<!-- end MonitorService 的配置 -->
+	<!-- begin microService 的配置 -->
+	<bean id="microService" class="cn.com.enersun.data_center.bigdata_service.serviceImp.MicroServiceImp"/>
+	<dgplat:service interface="cn.com.enersun.data_center.bigdata_service.MicroService" ref="microService" version="${versionMicroService}"/>
+	<!-- end microService 的配置 -->
+	<!-- begin monitorService 的配置 -->
+ 	<bean id="monitorService" class="cn.com.enersun.data_center.bigdata_service.serviceImp.MonitorServiceImp"/>
+	<dgplat:service interface="cn.com.enersun.data_center.bigdata_service.MonitorService" ref="monitorService" version="${versionMonitorService}"/>
+ 	<!-- end monitorService 的配置 -->
  
 	
 </beans>

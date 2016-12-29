@@ -7,7 +7,7 @@
         <dependent-module archiveName="hbase-handle-common-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/hbase-handle-common/hbase-handle-common">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="bigdata-service-api-0.0.1.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/bigdata-service-api/bigdata-service-api">
+        <dependent-module archiveName="bigdata-service-api-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/bigdata-service-api/bigdata-service-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="context-root" value="bigdata-service"/>

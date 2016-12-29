@@ -50,7 +50,7 @@
 		<uncode-dal.version>1.0.6</uncode-dal.version>
 		<!--<uncode-dal-spring.version>1.0.6</uncode-dal-spring.version>-->
 		<uncode-dal-mybatis.version>1.0.6</uncode-dal-mybatis.version>
-		<bigdata-service-api.version>0.0.1</bigdata-service-api.version>
+		<bigdata-service-api.version>1.0</bigdata-service-api.version>
 		<nx-dqms-common.version>0.1.2</nx-dqms-common.version>
 		<hbase-handle-common.version>0.0.1</hbase-handle-common.version>
 		<hbase.version>1.2.1</hbase.version>
