@@ -359,6 +359,18 @@
 					<artifactId>jdk.tools</artifactId>
 					<groupId>jdk.tools</groupId>
 				</exclusion>
+				<exclusion>
+					<groupId>javax.servlet.jsp</groupId>
+      				<artifactId>jsp-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jasper-runtime</artifactId>
+					<groupId>tomcat</groupId>
+				</exclusion>
+				<exclusion>
+					 <groupId>javax.servlet</groupId>
+    				<artifactId>servlet-api</artifactId>
+				</exclusion>
 				</exclusions>
 			</dependency>
 		<!--lrl hbase 读写jar end -->
