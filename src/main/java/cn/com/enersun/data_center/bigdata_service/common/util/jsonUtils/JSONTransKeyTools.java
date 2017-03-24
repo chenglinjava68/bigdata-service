@@ -1,5 +1,6 @@
 package cn.com.enersun.data_center.bigdata_service.common.util.jsonUtils;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -17,6 +18,21 @@ import org.json.JSONObject;
 * @version V1.0   
 */
 public class JSONTransKeyTools {
+	
+
+	//将JSONObject转化为Map<Int,String>
+	 public static Map<String,String> transJsonObjectMap(JSONObject o1){
+	        Map<String,String> outMap = new HashMap<String,String>();
+	        @SuppressWarnings("unchecked")
+			Iterator<String> nameItr = o1.keys();
+			String name ;
+			while (nameItr.hasNext()) {
+				name = nameItr.next();
+				outMap.put(name, o1.getString(name));
+			}
+			return outMap;
+	    }
+	 
 
 	//递归将所有key值换成小写
 	 public static JSONObject transJsonKeyToLowerCose(JSONObject o1){
@@ -93,4 +109,7 @@ public class JSONTransKeyTools {
 				newkey.append(value);
 				return newkey.toString();  
 			}
+			
+			
+			
 }

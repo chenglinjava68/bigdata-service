@@ -1,5 +1,6 @@
 package cn.com.enersun.data_center.bigdata_service.serviceImp;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,9 +19,9 @@ import cn.com.enersun.data_center.bigdata_service.constant.BaseParamFieldConstan
 import cn.com.enersun.data_center.bigdata_service.dao.BasicServiceDao;
 import cn.com.enersun.data_center.bigdata_service.dao.MicroParameterServiceDao;
 import cn.com.enersun.data_center.bigdata_service.dao.MicroServiceOrderDao;
-import cn.com.enersun.data_center.bigdata_service.entity.IceRealtimeEntity;
-import cn.com.enersun.data_center.bigdata_service.entity.ServiceParameterEntity;
-import cn.com.enersun.data_center.bigdata_service.entity.TerminalThemeEntity;
+import cn.com.enersun.data_center.bigdata_service.entity.*;
+
+
 
 
 /**   
@@ -80,7 +81,8 @@ public class MicroParameterServiceImp implements MicroParameterService {
 				result = transObjectByListmap(maplist,BaseParamFieldConstant.WILDFIRE_REMOTE_ATTR);
 				// JSON转换  
 			}else{
-				result = JSON.toJSONString("0");
+				List<Map<String,String>> maplist = microParameterServiceDao.queryInfoBySql(sql);
+				result = transToJson(maplist);
 			}
 	        return result;
 	       }
@@ -94,19 +96,26 @@ public class MicroParameterServiceImp implements MicroParameterService {
 	  * @Description 传入微服务编号、相应的授权码值和参数值 ，获取相应的格式的数据(JSON)
 	  * @param serviceId  服务编号
 	  * @param keyCode    授权码
-	  * @param String 传入参数 设备ID
+	  * @param String 传入参数 用json格式传入多个参数
 	  * @return 返回不同格式的数据(JSON)
 	 */
 	
-	public String detailServiceByParam(String serviceId, String keyCode,String assetId) {
+	public String detailServiceByParam(String serviceId, String keyCode,String jsonParams) {
 		String result = "";
 		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null){
 			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
 			String sql  = serviceParameter.getSqlStatement();
 			if(sql.isEmpty()) return JSON.toJSONString("0");
-			if (assetId != null) {  
-			    sql=sql.replace("(0)","('"+assetId+"')");
-			} 
+			if (jsonParams != null) {  
+				// String转换 JSONObject
+				Map<String, String> map = JsonParse(jsonParams);
+				for (int i = 0; i < map.size(); i++) {  
+					String param = map.get(String.valueOf(i));
+					if(param.indexOf("delete")>0 || param.indexOf("inter")>0 ) param="0";
+					param = param.replaceAll(",","','" );
+					sql=sql.replace("("+i+")","('"+param+"')");
+				} 
+			}
 			
 		if ("1020".equals(serviceId)){
 			List<TerminalThemeEntity> list = microParameterServiceDao.queryTerminalThemeInfo(sql);
@@ -117,7 +126,8 @@ public class MicroParameterServiceImp implements MicroParameterService {
 			result = transObjectByOutType(towermap,BaseParamFieldConstant.TOWER_ASSET_ATTR);
 			// JSON转换  
 		}else{
-			result = JSON.toJSONString("0");
+			List<Map<String,String>> maplist = microParameterServiceDao.queryInfoBySql(sql);
+			result = transToJson(maplist);
 		}
         return result;
        }
@@ -126,52 +136,52 @@ public class MicroParameterServiceImp implements MicroParameterService {
 
   }
 
-	/**
-	 * 
-	  * @Description 传入微服务编号、相应的授权码值和参数值 ，获取相应的格式的数据(JSON)
-	  * @param String[]... params 传入参数
-	  * @return 返回不同格式的数据(JSON)
-	 */
-	
-	public String detailServiceByParams(String serviceId, String keyCode,String[]... params) {
-		
-		String result = "";
-		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null){
-			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
-			String sql  = serviceParameter.getSqlStatement();
-			if(sql.isEmpty()) return JSON.toJSONString("0");
-			if (params != null) {  
-				for (int i = 0; i < params.length; i++) {  
-					String value=""; 
-					String[] param =  params[i];
-					int l = param.length;
-					for(int j=0 ;j<l;j++){
-						if(j==l-1){
-							value+=  param[j].toString();
-						}else{
-							value+=  param[j].toString()+",";
-						}
-					}
-					sql=sql.replace("("+i+")","("+value+")");
-				}  
-			} 
-			
-			if ("1020".equals(serviceId)){
-				List<TerminalThemeEntity> list = microParameterServiceDao.queryTerminalThemeInfo(sql);
-				result = transObjectByOutType(list,BaseParamFieldConstant.THEME_TERMINAL_ATTR);
-				// JSON转换  
-			}else if ("1021".equals(serviceId)){
-				Map<String,String> towermap = microParameterServiceDao.queryTowerInfoById(sql);
-				result = transObjectByOutType(towermap,BaseParamFieldConstant.TOWER_ASSET_ATTR);
-				// JSON转换  
-			}else{
-				result = JSON.toJSONString("0");
-			}
-	        return result;
-	       }
-		result = JSON.toJSONString("0");
-		return result;
-	}
+//	/**
+//	 * 
+//	  * @Description 传入微服务编号、相应的授权码值和参数值 ，获取相应的格式的数据(JSON)
+//	  * @param String[]... params 传入参数
+//	  * @return 返回不同格式的数据(JSON)
+//	 */
+//	
+//	public String detailServiceByParams(String serviceId, String keyCode,String[]... params) {
+//		
+//		String result = "";
+//		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null){
+//			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
+//			String sql  = serviceParameter.getSqlStatement();
+//			if(sql.isEmpty()) return JSON.toJSONString("0");
+//			if (params != null) {  
+//				for (int i = 0; i < params.length; i++) {  
+//					String value=""; 
+//					String[] param =  params[i];
+//					int l = param.length;
+//					for(int j=0 ;j<l;j++){
+//						if(j==l-1){
+//							value+=  param[j].toString();
+//						}else{
+//							value+=  param[j].toString()+",";
+//						}
+//					}
+//					sql=sql.replace("("+i+")","("+value+")");
+//				}  
+//			} 
+//			
+//			if ("1020".equals(serviceId)){
+//				List<TerminalThemeEntity> list = microParameterServiceDao.queryTerminalThemeInfo(sql);
+//				result = transObjectByOutType(list,BaseParamFieldConstant.THEME_TERMINAL_ATTR);
+//				// JSON转换  
+//			}else if ("1021".equals(serviceId)){
+//				Map<String,String> towermap = microParameterServiceDao.queryTowerInfoById(sql);
+//				result = transObjectByOutType(towermap,BaseParamFieldConstant.TOWER_ASSET_ATTR);
+//				// JSON转换  
+//			}else{
+//				result = JSON.toJSONString("0");
+//			}
+//	        return result;
+//	       }
+//		result = JSON.toJSONString("0");
+//		return result;
+//	}
 	
 	private String transObjectByOutType(List<?> list, Map<String, String> ObjectAtrrMap) {
 		String result = "";
@@ -205,5 +215,31 @@ public class MicroParameterServiceImp implements MicroParameterService {
 		Map<String ,String> newObjectAttrMap = new CaseInsensitiveMap(wildfireRemoteAttr); 
 		result =transObjectByOutType(maplist,newObjectAttrMap);
 		return result;
+	}
+	
+	private Map<String,String> JsonParse(String jsonParams){
+		
+		 Map<String,String> map = new HashMap<String,String>();
+		 JSONObject jsonObj = new JSONObject(jsonParams);
+		 map = JSONTransKeyTools.transJsonObjectMap(jsonObj);
+		return map;
+	}
+	
+	/**
+	 * 
+	* @Title: transToJson 
+	* @Description: TODO(list 转为json) 
+	* @param @param list
+	* @param @return    设定文件 
+	* @return String    返回类型 
+	* @throws
+	 */
+	private String transToJson(List<Map<String,String>> list) {
+		String result = "";
+		if(list.isEmpty()) return result;
+		String StrResult = JSON.toJSONString(list).toString();
+		result = StrResult;
+		return StrResult;
+		
 	}
 }

@@ -20,16 +20,27 @@ public interface MicroParameterServiceDao {
 
 	/**
 	 * 
+	* @Title: queryInfoBySql 
+	* @Description: TODO(通过sql查询数据服务台账中的任何满足sql的数据) 
+	* @param @param sql
+	* @param @return    设定文件 
+	* @return List<Map<String ,String >>    返回类型 
+	* @throws
+	 */
+	List<Map<String ,String >> queryInfoBySql(String sql);
+	
+	
+	/**
+	 * 
 	* @Title: queryTerminalThemeInfo 
 	* @Description: TODO(通过终端类型和主题分类查询终端主题台账) 
-	* @param @param sql
 	* @param @param sql
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
 	List<TerminalThemeEntity> queryTerminalThemeInfo(String sql);
-
+	
 	/**
 	 * 
 	* @Title: queryIceRealtimeInfo 
