@@ -5,8 +5,8 @@ import java.util.List;
 /**   
 * Copyright (c) 2016 Founder Ltd. All Rights Reserved.
 * Company:昆明能讯科技
-* @Title: TerminalInfo.java 
-* @Package cn.com.enersun.data_center.facade.dto 
+* @Title: AssetInfoEntity.java 
+* @Package cn.com.enersun.data_center.bigdata_service.entity 
 * @Description: TODO(设备台账信息) 
 * @author enersun_lhb  
 * @date 2016年7月18日 下午3:27:54 

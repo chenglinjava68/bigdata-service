@@ -52,8 +52,7 @@ import cn.com.enersun.hbase.ThemeParamValueClient;
 * @version V1.0   
 */
 public class MonitorServiceImp implements MonitorService{
-	
-	private Logger log = LoggerFactory.getLogger(MonitorServiceImp.class);
+	private static final Logger LOG =LoggerFactory.getLogger(MonitorServiceImp.class);
 	
 //	private final String HBASE_TABLE_NAME = "THEME_PARAM_VALUE";
     private ThemeParamValueClient themeParamValueClient;
@@ -345,7 +344,7 @@ public class MonitorServiceImp implements MonitorService{
 						valueList.add(sortedMap);
 					} catch (Exception e) {
 						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key,null);//string带参数，利用String.format
-						log.error(msg, e);
+						LOG.error(msg, e);
 					}
 				}
 			}
@@ -396,7 +395,7 @@ public class MonitorServiceImp implements MonitorService{
 						valueList.add(sortedMap);
 					} catch (Exception e) {
 						String msg = String.format("{error:'%s/%s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key.toString());//string带参数，利用String.format
-					    log.error(msg, e);
+					    LOG.error(msg, e);
 					}
 			}
 			if(valueList.isEmpty()) return emptyList;
@@ -447,7 +446,7 @@ public class MonitorServiceImp implements MonitorService{
 						valueList.add(sortedMap);
 					} catch (Exception e) {
 						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByPrefix]获取数据出现异常！]", key);//string带参数，利用String.format
-					    log.error(msg, e);
+					    LOG.error(msg, e);
 					}
 			}
 			if(valueList.isEmpty()) return emptyList;
@@ -504,7 +503,7 @@ public class MonitorServiceImp implements MonitorService{
 						valueList.add(sortedMap);
 					} catch (Exception e) {
 						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", startkey,endkey);//string带参数，利用String.format
-					    log.error(msg, e);
+					    LOG.error(msg, e);
 					}
 			}
 			if(valueList.isEmpty()) return emptyList;
@@ -552,7 +551,7 @@ public class MonitorServiceImp implements MonitorService{
 				valueList.add(sortedMap);
 			} catch (Exception e) {
 				String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key);//string带参数，利用String.format
-			    log.error(msg, e);
+			    LOG.error(msg, e);
 			}
 	        return  valueList;
 	      }
@@ -588,7 +587,7 @@ public class MonitorServiceImp implements MonitorService{
 				
 			} catch (Exception e) {
 				String msg = StringUtils.getExceptionMsg(e);
-			    log.error(msg, e);
+			    LOG.error(msg, e);
 			}
 			return monitorValue;
 		}
@@ -703,7 +702,7 @@ public class MonitorServiceImp implements MonitorService{
 					 newAttributeAndMonitorList.add(new AttributeAndMonitorInfo(attrId,attributeName,dataType,unit,monitorDetailList));
 				} catch (Exception e) {
 					String msg = StringUtils.getExceptionMsg(e);
-				    log.error(msg, e);
+				    LOG.error(msg, e);
 				}
 			}
 			ThemeInfo newthemeInfo = new ThemeInfo(themeId,themeName,topicId,topicType,newAttributeAndMonitorList); 
@@ -737,7 +736,40 @@ public class MonitorServiceImp implements MonitorService{
 			} catch (Exception e) {
 				
 				String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValueByKey]获取数据出现异常！]", key);//string带参数，利用String.format
-			    log.error(msg, e);
+			    LOG.error(msg, e);
+			}
+			return rersult;
+	      }
+		
+		return emptyValue;
+	}
+	
+	
+	/**
+	 * 
+	* @Title: MonitorValueByThemeAttrIdToJson 
+	* @Description: TODO(通过themeId+attrId 组成的rowkey前端 ,查询最新一条监测值) 
+	* @param @param themeId
+	* @param @param attrId
+	* @param @return    设定文件 
+	* @return json    返回类型 
+	* 
+	 */
+	public String MonitorValueByThemeAttrIdToJson(String themeId, String attrId) {
+        String 	emptyValue = "0";
+		if(themeId != null &&  !"".equals(themeId) && attrId != null &&  !"".equals(attrId)){
+			themeParamValueClient = new ThemeParamValueClient();
+			//"1000000000000168337810099"
+			Map<String, String> valuesMap = new HashMap<String, String>();
+			String rowkey = new StringBuilder(themeId).append(attrId).toString();
+			String rersult = "";
+			try {
+				valuesMap = themeParamValueClient.getLastValuesByPrefix(rowkey,1);
+				rersult = JSON.toJSONString(valuesMap,true);
+			} catch (Exception e) {
+					
+					String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getLastValuesByPrefix]获取数据出现异常！]", rowkey);//string带参数，利用String.format
+			    LOG.error(msg, e);
 			}
 			return rersult;
 	      }
@@ -800,7 +832,7 @@ public class MonitorServiceImp implements MonitorService{
 						lastAttrData.add(attributeDataObject);
 					} catch (Exception e) {
 						String msg = StringUtils.getExceptionMsg(e);
-					    log.error(msg, e);
+					    LOG.error(msg, e);
 					}
 			}
 			BeanUtils.copyProperties(themeTypeAttributeInfoEntity,tObject);//可以取代上面三行

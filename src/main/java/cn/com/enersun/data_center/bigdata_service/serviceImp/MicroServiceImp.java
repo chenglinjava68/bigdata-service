@@ -1,13 +1,21 @@
 package cn.com.enersun.data_center.bigdata_service.serviceImp;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +23,9 @@ import org.springframework.beans.factory.annotation.Value;
 import com.alibaba.fastjson.JSON;
 
 import cn.com.enersun.data_center.bigdata_service.MicroService;
+import cn.com.enersun.data_center.bigdata_service.common.util.StringUtils;
+import cn.com.enersun.data_center.bigdata_service.common.util.excelUtil.ExcelException;
+import cn.com.enersun.data_center.bigdata_service.common.util.excelUtil.ExcelJXLUitl;
 import cn.com.enersun.data_center.bigdata_service.common.util.jsonUtils.JSONTransKeyTools;
 import cn.com.enersun.data_center.bigdata_service.common.util.xmlUtils.XMLTransTools;
 import cn.com.enersun.data_center.bigdata_service.constant.FieldConstant;
@@ -59,6 +70,8 @@ public class MicroServiceImp implements MicroService {
     @Value("${versionMicroService}")
 	private String versionMicroService;
 	 
+//    @Autowired  
+//    private  HttpServletRequest request;     
 	 /**
 	  * 
 	  * @Description : 服务版本号
@@ -77,9 +90,9 @@ public class MicroServiceImp implements MicroService {
 	public String devServiceOrder() {
 		List<String> empty=new ArrayList<String>();
 		empty.add("0");
-		LOG.info("microServiceOrderDao.queryServiceOrder start!");
+//		LOG.info("microServiceOrderDao.queryServiceOrder start!");
 		List<ServiceParameterEntity> result = microServiceOrderDao.queryServiceOrder();
-		LOG.info("microServiceOrderDao.queryServiceOrder end!");
+//		LOG.info("microServiceOrderDao.queryServiceOrder end!");
 	    if(result.isEmpty()){
 	    	return JSON.toJSONString(empty);
 	    }
@@ -114,7 +127,7 @@ public class MicroServiceImp implements MicroService {
 			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
 			int OutType = serviceParameter.getOutType();
 			String sql  = serviceParameter.getSqlStatement();
-		
+			if(sql.isEmpty()) return JSON.toJSONString("0");
 			if ("1002".equals(serviceId)){
 				List<DefectEntity> list = basicServiceDao.queryDefectsInfo(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DEFECT_ATTR);
@@ -157,6 +170,7 @@ public class MicroServiceImp implements MicroService {
 			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
 			int OutType = serviceParameter.getOutType();
 			String sql  = serviceParameter.getSqlStatement();
+			if(sql.isEmpty()) return JSON.toJSONString("0");
 			if ("1004".equals(serviceId)){
 				List<DmDeviceEntity> list = basicServiceDao.queryMainAssetInfoByOrgAndSite(sql,params);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_DEVICE_ATTR);
@@ -210,20 +224,67 @@ public class MicroServiceImp implements MicroService {
 	
 	private String transObjectByOutType(List<?> list ,int OutType, Map<String ,String> ObjectAtrrMap){
 		String result = "";
+		String listResult;
+		JSONArray jsonArray;
 		switch(OutType)
 		{
 		case 1:
-			result = XMLTransTools.objectToxml(list);
+			 List<Map<String,String>> ObjectList =new ArrayList<Map<String,String>>(); 
+			 listResult = JSON.toJSONString(list).toString();
+			 // String转换  JSONArray   
+			 jsonArray  = new JSONArray(listResult);
+			 int n  = jsonArray.length();
+			 for(int i=0 ;i<n;i++){
+				 JSONObject jsonObj= (JSONObject) jsonArray.get(i);
+				 @SuppressWarnings("unchecked")
+				Iterator<String> nameItr = jsonObj.keys();
+				 String name;
+				 Map<String, String> outMap = new HashMap<String, String>();
+				 while (nameItr.hasNext()) {
+					 name = nameItr.next();
+					 outMap.put(name, jsonObj.getString(name));
+				 }
+				 ObjectList.add(outMap);
+			 }
+			 result =XMLTransTools.objectToxml(ObjectList);
 			 break;
 		case 2:
-			String listresult = JSON.toJSONString(list).toString();
+			listResult = JSON.toJSONString(list).toString();
 			// String转换  JSONArray
-			JSONArray jsonArray  = new JSONArray(listresult);
+			jsonArray  = new JSONArray(listResult);
 			JSONArray jsonresult = JSONTransKeyTools.transArray(jsonArray, ObjectAtrrMap);
 			result = jsonresult.toString();
 			 break;
 		case 3:
-			System.out.println("Excel Not building finished !");
+			String projectName ="bigdata-service";
+		    // System.out.println("Excel Not building finished !");
+			String rootPath = System.getProperty("user.dir").replace("bin", "webapps");
+			System.out.println(rootPath+File.separator+"excelOut.xls");
+			rootPath+=File.separator+projectName; 
+			File file2 = new File(rootPath+File.separator+"excelOut.xls"); 
+			System.out.println(rootPath+File.separator+"excelOut.xls");
+			OutputStream out;
+			try {
+				out = new FileOutputStream(file2);
+				LinkedHashMap<String,String> lmap = new LinkedHashMap<String,String>(ObjectAtrrMap);
+				ExcelJXLUitl.listToExcel(list, lmap, "sheet", 65535, out);
+				out.flush(); 
+				//关闭输出流对象 
+				out.close(); 
+				result = rootPath+File.separator+"excelOut.xls";
+			} catch (FileNotFoundException e) {
+				result=JSON.toJSONString("0");
+				String msg = StringUtils.getExceptionMsg(e);
+			    LOG.error(msg, e);
+			} catch (ExcelException e) {
+				result=JSON.toJSONString("0");
+				String msg = StringUtils.getExceptionMsg(e);
+			    LOG.error(msg, e);
+			} catch (IOException e) {
+				result=JSON.toJSONString("0");
+				String msg = StringUtils.getExceptionMsg(e);
+			    LOG.error(msg, e);
+			}
 			 break;
 		}
 		

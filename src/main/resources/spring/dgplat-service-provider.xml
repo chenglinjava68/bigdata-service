@@ -21,6 +21,9 @@
  	<bean id="monitorService" class="cn.com.enersun.data_center.bigdata_service.serviceImp.MonitorServiceImp"/>
 	<dgplat:service interface="cn.com.enersun.data_center.bigdata_service.MonitorService" ref="monitorService" version="${versionMonitorService}"/>
  	<!-- end monitorService 的配置 -->
- 
+    <!-- begin microParameterService 的配置 -->
+ 	<bean id="microParameterService" class="cn.com.enersun.data_center.bigdata_service.serviceImp.MicroParameterServiceImp"/>
+	<dgplat:service interface="cn.com.enersun.data_center.bigdata_service.MicroParameterService" ref="microParameterService" version="${versionMicroParameterService}"/>
+ 	<!-- end microParameterService 的配置 -->
 	
 </beans>
