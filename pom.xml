@@ -465,8 +465,7 @@
 				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
-		</resources>
-		  <resource>
+			 <resource>
             <directory>src/main/java</directory>
             <includes>
                 <include>**/*.properties</include>
@@ -476,6 +475,8 @@
             </includes>
             <filtering>false</filtering>
         </resource>
+		</resources>
+		 
 
 		<plugins>
 			<plugin>
