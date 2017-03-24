@@ -223,9 +223,10 @@ public class MicroServiceImp implements MicroService {
 	}
 	
 	private String transObjectByOutType(List<?> list ,int OutType, Map<String ,String> ObjectAtrrMap){
-		String result = "";
+		String result = "0";
 		String listResult;
 		JSONArray jsonArray;
+		if(list.isEmpty()) return result;
 		switch(OutType)
 		{
 		case 1:

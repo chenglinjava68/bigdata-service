@@ -184,7 +184,7 @@ public class MicroParameterServiceImp implements MicroParameterService {
 //	}
 	
 	private String transObjectByOutType(List<?> list, Map<String, String> ObjectAtrrMap) {
-		String result = "";
+		String result = "0";
 		if(list.isEmpty()) return result;
 		String StrResult = JSON.toJSONString(list).toString();
 		// String转换 JSONArray
@@ -195,7 +195,7 @@ public class MicroParameterServiceImp implements MicroParameterService {
 	}
 
 	private String transObjectByOutType(Map<String ,String > map, Map<String, String> ObjectAtrrMap) {
-		String result = "";
+		String result = "0";
 		if(map.isEmpty()) return result;
 		@SuppressWarnings("unchecked")
 		Map<String ,String> newObjectAttrMap = new CaseInsensitiveMap(ObjectAtrrMap); 
@@ -209,7 +209,7 @@ public class MicroParameterServiceImp implements MicroParameterService {
 
 	
 	private String transObjectByListmap(List<Map<String, String>> maplist, Map<String, String> wildfireRemoteAttr) {
-		String result = "";
+		String result = "0";
 		if(maplist.isEmpty()) return result;
 		@SuppressWarnings("unchecked")
 		Map<String ,String> newObjectAttrMap = new CaseInsensitiveMap(wildfireRemoteAttr); 
@@ -235,7 +235,7 @@ public class MicroParameterServiceImp implements MicroParameterService {
 	* @throws
 	 */
 	private String transToJson(List<Map<String,String>> list) {
-		String result = "";
+		String result = "0";
 		if(list.isEmpty()) return result;
 		String StrResult = JSON.toJSONString(list).toString();
 		result = StrResult;
