@@ -122,7 +122,7 @@ public class MicroServiceImp implements MicroService {
 	  * @return 返回不同格式的数据(XML/JSON)、excel文件返回下载地址
 	 */
 	public String detailServiceStr(String serviceId, String keyCode) {
-		String result = "";
+		String result = "0";
 		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null){
 			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
 			int OutType = serviceParameter.getOutType();
@@ -148,7 +148,7 @@ public class MicroServiceImp implements MicroService {
 			}
 	        return result;
 	       }
-		result = JSON.toJSONString("0");
+		result = JSON.toJSONString("参数不能为空！请重新输入");
 		return result;
 	}
 	
@@ -159,7 +159,7 @@ public class MicroServiceImp implements MicroService {
 	  * @return 返回不同格式的数据(XML/JSON)、excel文件返回下载地址
 	 */
 	public String detailServiceByParams(String serviceId, String keyCode,Object... obj) {
-		String result = "";
+		String result = "0";
 		Map<String, Object> params = new  HashMap<String, Object>();  
 		if (obj != null) {  
              for (int i = 0; i < obj.length; i++) {  
@@ -218,7 +218,7 @@ public class MicroServiceImp implements MicroService {
 			}
 	        return result;
 	       }
-		result = JSON.toJSONString("0");
+		result = JSON.toJSONString("参数不能为空！请重新输入");
 		return result;
 	}
 	
@@ -226,7 +226,7 @@ public class MicroServiceImp implements MicroService {
 		String result = "0";
 		String listResult;
 		JSONArray jsonArray;
-		if(list.isEmpty()) return result;
+		
 		switch(OutType)
 		{
 		case 1:

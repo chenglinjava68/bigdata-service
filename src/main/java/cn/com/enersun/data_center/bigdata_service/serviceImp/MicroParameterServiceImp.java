@@ -67,7 +67,7 @@ public class MicroParameterServiceImp implements MicroParameterService {
 	  * @return 返回不同格式的数据(JSON)
 	 */
 	public String detailServiceStr(String serviceId,String keyCode) {
-		String result = "";
+		String result = "0";
 		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null){
 			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
 			String sql  = serviceParameter.getSqlStatement();
@@ -86,7 +86,7 @@ public class MicroParameterServiceImp implements MicroParameterService {
 			}
 	        return result;
 	       }
-		result = JSON.toJSONString("0");
+		result = JSON.toJSONString("参数不能为空！请重新输入");
 		return result;
 	}
 	
@@ -101,22 +101,23 @@ public class MicroParameterServiceImp implements MicroParameterService {
 	 */
 	
 	public String detailServiceByParam(String serviceId, String keyCode,String jsonParams) {
-		String result = "";
-		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null){
+		String result = "0";
+		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null
+				&&  !"".equals(jsonParams) && jsonParams != null){
 			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
 			String sql  = serviceParameter.getSqlStatement();
-			if(sql.isEmpty()) return JSON.toJSONString("0");
-			if (jsonParams != null) {  
-				// String转换 JSONObject
-				Map<String, String> map = JsonParse(jsonParams);
-				for (int i = 0; i < map.size(); i++) {  
-					String param = map.get(String.valueOf(i));
-					if(param.indexOf("delete")>0 || param.indexOf("inter")>0 ) param="0";
-					param = param.replaceAll(",","','" );
-					sql=sql.replace("("+i+")","('"+param+"')");
-				} 
+			if (sql.isEmpty())
+				return JSON.toJSONString("0");
+			// String转换 JSONObject
+			Map<String, String> map = JsonParse(jsonParams);
+			for (int i = 0; i < map.size(); i++) {
+				String param = map.get(String.valueOf(i));
+				if (param.indexOf("delete") > 0 || param.indexOf("inter") > 0)
+					param = "0";
+				param = param.replaceAll(",", "','");
+				sql = sql.replace("(" + i + ")", "('" + param + "')");
 			}
-			
+
 		if ("1020".equals(serviceId)){
 			List<TerminalThemeEntity> list = microParameterServiceDao.queryTerminalThemeInfo(sql);
 			result = transObjectByOutType(list,BaseParamFieldConstant.THEME_TERMINAL_ATTR);
@@ -131,7 +132,7 @@ public class MicroParameterServiceImp implements MicroParameterService {
 		}
         return result;
        }
-	result = JSON.toJSONString("0");
+	result = JSON.toJSONString("参数不能为空！请重新输入");
 	return result;
 
   }

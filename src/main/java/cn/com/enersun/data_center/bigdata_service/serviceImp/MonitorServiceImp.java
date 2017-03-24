@@ -343,8 +343,8 @@ public class MonitorServiceImp implements MonitorService{
 						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
 						valueList.add(sortedMap);
 					} catch (Exception e) {
-						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key,null);//string带参数，利用String.format
-						LOG.error(msg, e);
+						String msg = StringUtils.getExceptionMsg(e);
+					    LOG.error(msg, e);
 					}
 				}
 			}
@@ -394,7 +394,7 @@ public class MonitorServiceImp implements MonitorService{
 						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
 						valueList.add(sortedMap);
 					} catch (Exception e) {
-						String msg = String.format("{error:'%s/%s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key.toString());//string带参数，利用String.format
+						String msg = StringUtils.getExceptionMsg(e);
 					    LOG.error(msg, e);
 					}
 			}
@@ -445,7 +445,7 @@ public class MonitorServiceImp implements MonitorService{
 						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
 						valueList.add(sortedMap);
 					} catch (Exception e) {
-						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByPrefix]获取数据出现异常！]", key);//string带参数，利用String.format
+						String msg = StringUtils.getExceptionMsg(e);
 					    LOG.error(msg, e);
 					}
 			}
@@ -502,7 +502,7 @@ public class MonitorServiceImp implements MonitorService{
 						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
 						valueList.add(sortedMap);
 					} catch (Exception e) {
-						String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", startkey,endkey);//string带参数，利用String.format
+						String msg = StringUtils.getExceptionMsg(e);
 					    LOG.error(msg, e);
 					}
 			}
@@ -550,7 +550,7 @@ public class MonitorServiceImp implements MonitorService{
 				Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
 				valueList.add(sortedMap);
 			} catch (Exception e) {
-				String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValuesByKey]获取数据出现异常！]", key);//string带参数，利用String.format
+				String msg = StringUtils.getExceptionMsg(e);
 			    LOG.error(msg, e);
 			}
 	        return  valueList;
@@ -734,8 +734,7 @@ public class MonitorServiceImp implements MonitorService{
 			try {
 				rersult = themeParamValueClient.getValueByKey(key);
 			} catch (Exception e) {
-				
-				String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getValueByKey]获取数据出现异常！]", key);//string带参数，利用String.format
+				String msg = StringUtils.getExceptionMsg(e);
 			    LOG.error(msg, e);
 			}
 			return rersult;
@@ -767,8 +766,7 @@ public class MonitorServiceImp implements MonitorService{
 				valuesMap = themeParamValueClient.getLastValuesByPrefix(rowkey,1);
 				rersult = JSON.toJSONString(valuesMap,true);
 			} catch (Exception e) {
-					
-					String msg = String.format("{error:'%s %s'}-[方法[themeParamValueClient.getLastValuesByPrefix]获取数据出现异常！]", rowkey);//string带参数，利用String.format
+				String msg = StringUtils.getExceptionMsg(e);
 			    LOG.error(msg, e);
 			}
 			return rersult;
