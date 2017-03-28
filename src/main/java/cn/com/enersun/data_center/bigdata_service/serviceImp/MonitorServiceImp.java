@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.annotation.Resource;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import com.alibaba.dubbo.common.logger.Logger;
 import com.alibaba.dubbo.common.logger.LoggerFactory;
+import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.com.enersun.data_center.bigdata_service.MonitorService;
@@ -51,13 +52,14 @@ import cn.com.enersun.hbase.ThemeParamValueClient;
 * @date 2016年6月24日 上午11:02:19 
 * @version V1.0   
 */
+@Service
 public class MonitorServiceImp implements MonitorService{
 	private static final Logger LOG =LoggerFactory.getLogger(MonitorServiceImp.class);
 	
 //	private final String HBASE_TABLE_NAME = "THEME_PARAM_VALUE";
     private ThemeParamValueClient themeParamValueClient;
 	
-	@Resource(name="monitorServiceDao")
+	@Autowired
 	private MonitorServiceDao monitorServiceDao;
 	
 	@Value("${versionMicroService}")

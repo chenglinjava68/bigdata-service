@@ -4,7 +4,7 @@
 
   <groupId>cn.com.enersun.data_center</groupId>
   <artifactId>bigdata-service</artifactId>
-  <version>0.0.1</version>
+  <version>1.0.1</version>
   <packaging>war</packaging>
 
   <name>bigdata-service</name>

@@ -3,6 +3,7 @@ package cn.com.enersun.data_center.bigdata_service.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import org.springframework.stereotype.Component;
 
 import cn.com.enersun.data_center.bigdata_service.entity.ServiceParameterEntity;
 
@@ -11,6 +12,8 @@ import cn.com.enersun.data_center.bigdata_service.entity.ServiceParameterEntity;
  * @author enersun_lhb
  *
  */
+
+@Component
 public interface MicroServiceOrderDao {
 	
 	

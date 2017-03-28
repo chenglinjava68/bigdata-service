@@ -3,6 +3,7 @@ package cn.com.enersun.data_center.bigdata_service.dao;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Component;
 
 import cn.com.enersun.data_center.bigdata_service.entity.*;
 
@@ -16,6 +17,7 @@ import cn.com.enersun.data_center.bigdata_service.entity.*;
 * @date 2017年3月21日 下午12:49:34 
 * @version V1.0   
 */
+@Component
 public interface MicroParameterServiceDao {
 
 	/**

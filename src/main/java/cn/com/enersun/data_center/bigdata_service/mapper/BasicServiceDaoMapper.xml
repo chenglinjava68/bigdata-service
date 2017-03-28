@@ -3,6 +3,11 @@
 <mapper namespace="cn.com.enersun.data_center.bigdata_service.dao.BasicServiceDao">
 
  <!-- mapping1 -->
+ <!-- 通过已配置的sql，查询任何满足sql的信息 -->
+ <select id="queryInfoBySql" parameterType="string" resultType="map">
+  ${value}
+ </select>
+ 
  <!-- 南网查询缺陷信息 -->
  <select id="queryDefectsInfo" parameterType="string" resultType="DefectEntity">
   ${value} 

@@ -3,6 +3,8 @@ package cn.com.enersun.data_center.bigdata_service.dao;
 
 import java.util.List;
 
+import org.springframework.stereotype.Component;
+
 import cn.com.enersun.data_center.bigdata_service.entity.AssetInfoEntity;
 import cn.com.enersun.data_center.bigdata_service.entity.AttributeBaseEntity;
 import cn.com.enersun.data_center.bigdata_service.entity.DeviceDetailInfoEntity;
@@ -22,6 +24,8 @@ import cn.com.enersun.data_center.bigdata_service.entity.TopicTypeEntity;
 * @date 2016年6月26日 下午3:57:45 
 * @version V1.0   
 */
+
+@Component
 public interface MonitorServiceDao  {
 	
 	/**

@@ -12,14 +12,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.com.enersun.data_center.bigdata_service.MicroService;
@@ -57,14 +58,16 @@ import cn.com.enersun.data_center.bigdata_service.entity.TowerEntity;
 * @date 2016年6月13日 下午4:32:50 
 * @version V1.0   
 */
+@Service
 public class MicroServiceImp implements MicroService {	
 
     private static final Logger LOG =LoggerFactory.getLogger(MicroServiceImp.class);
 
-	@Resource(name="microServiceOrderDao")
+//	@Resource(name="microServiceOrderDao")
+    @Autowired
 	private  MicroServiceOrderDao microServiceOrderDao;
 	
-	@Resource(name="basicServiceDao")
+	@Autowired
 	private  BasicServiceDao basicServiceDao;
 	
     @Value("${versionMicroService}")
@@ -144,7 +147,8 @@ public class MicroServiceImp implements MicroService {
 				List<DmPartEntity> list = basicServiceDao.queryPartsInfoBySql(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_PARTS_ATTR);
 			}else{
-				result = JSON.toJSONString("0");
+				List<Map<String,String>> maplist = basicServiceDao.queryInfoBySql(sql);
+				result = JSON.toJSONString(maplist).toString();
 			}
 	        return result;
 	       }
@@ -155,26 +159,24 @@ public class MicroServiceImp implements MicroService {
 	/**
 	 * 
 	  * @Description 传入微服务编号、相应的授权码值和参数值 ，获取相应的格式的数据(XML/JSON/Excel(返回文件地址))
-	  * @param obj   条件参数HashMap(serviceId  服务编号,keyCode    授权码。。。。。)按照顺序记录
+	  * @param (serviceId  服务编号,keyCode    授权码。。。。。)按照顺序记录
+	  * @param JSON 参数条件  如：{"0":"05012222","1":"大理局","2":"4",...} 冒号前面是参数序号 冒号后为参数值
 	  * @return 返回不同格式的数据(XML/JSON)、excel文件返回下载地址
 	 */
-	public String detailServiceByParams(String serviceId, String keyCode,Object... obj) {
+	public String detailServiceByParams(String serviceId, String keyCode,String jsonParams) {
 		String result = "0";
-		Map<String, Object> params = new  HashMap<String, Object>();  
-		if (obj != null) {  
-             for (int i = 0; i < obj.length; i++) {  
-            	 params.put(String.valueOf(i + 1), obj[i]);  
-             }  
-         }  
-		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null){
+		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null
+				&&  !"".equals(jsonParams) && jsonParams != null){
+			// json转换map 
+			Map<String, String> params = JSONTransKeyTools.JsonParse(jsonParams); 
 			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
 			int OutType = serviceParameter.getOutType();
 			String sql  = serviceParameter.getSqlStatement();
 			if(sql.isEmpty()) return JSON.toJSONString("0");
 			if ("1004".equals(serviceId)){
 				List<DmDeviceEntity> list = basicServiceDao.queryMainAssetInfoByOrgAndSite(sql,params);
-				result = transObjectByOutType(list, OutType,FieldConstant.DM_DEVICE_ATTR);
 				// JSON转换  
+				result = transObjectByOutType(list, OutType,FieldConstant.DM_DEVICE_ATTR);
 				
 			}else if ("1005".equals(serviceId)){
 				List<DmPartEntity> list = basicServiceDao.queryPartsInfoByOrgAndSite(sql ,params);
@@ -214,7 +216,8 @@ public class MicroServiceImp implements MicroService {
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_FUSE_ATTR);
 			
 			}else{
-				result = JSON.toJSONString("0");
+				List<Map<String,String>> maplist = basicServiceDao.queryInfoBySql(sql);
+				result = JSON.toJSONString(maplist).toString();
 			}
 	        return result;
 	       }

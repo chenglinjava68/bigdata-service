@@ -4,32 +4,32 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public interface BaseDao {
+public interface BaseDao<T,ID extends Serializable>  {
 
 	/** 加载指定ID的持久化对象 */
-	public Object loadById(Class<?> clazz, Serializable id);
+	public Object loadById(Class<T> clazz, Serializable id);
 
 	/** 加载满足条件的持久化对象 */
 	public Object loadObject(String hql);
 
 	/** 装载指定类的所有持久化对象 */
-	public List listAll(String clazz);
+	public List<T> listAll(String clazz);
 
 	/** 分页装载指定类的所有持久化对象 */
-	public List listAll(Class<?> clazz, int pageNo, int pageSize);
+	public List<T> listAll(Class<?> clazz, int pageNo, int pageSize);
 
 	/** 统计指定类的所有持久化对象 */
 	public int countAll(String clazz);
 
 	/** 分页查询指定类的满足条件的持久化对象 */
-	public List query(String hql, int pageNo, int pageSize);
+	public List<T> query(String hql, int pageNo, int pageSize);
 
 	/** 统计指定类的查询结果 */
 	public int countQuery(String hql);
 
 	/** 执行sql语句，返回List对象 */
 
-	public List getListBySql(String sql);
+	public List<T> getListBySql(String sql);
 
 	/** 执行sql语句，返回单个String值 */
 	public String getSingleValueBySql(String sql);
@@ -64,9 +64,9 @@ public interface BaseDao {
 	public List<Map<String, Object>> getListWithAliasName(List<String> hiddenFields, Map<String, String> aliasName);
 
 	// 单条数据转为对象
-	public <T> T as(Class<T> beanClass);
+	public T as(Class<T> beanClass);
 
 	// 多条数据转为对象
-	public <T> List<T> asList(Class<T> beanClass);
+	public List<T> asList(Class<T> beanClass);
 
 }

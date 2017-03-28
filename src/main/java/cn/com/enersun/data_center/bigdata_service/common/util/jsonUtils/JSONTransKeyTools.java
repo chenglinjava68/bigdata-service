@@ -110,6 +110,19 @@ public class JSONTransKeyTools {
 				return newkey.toString();  
 			}
 			
-			
+			/**
+			* @Title: JsonParse 
+			* @Description: TODO(JSON转map) 
+			* @param @param jsonParams
+			* @param @return    设定文件 
+			* @return Map<String,String>    返回类型 
+			* @throws
+			 */
+			public static Map<String,String> JsonParse(String jsonParams){
+				 Map<String,String> map = new HashMap<String,String>();
+				 JSONObject jsonObj = new JSONObject(jsonParams);
+				 map = JSONTransKeyTools.transJsonObjectMap(jsonObj);
+				return map;
+			}
 			
 }

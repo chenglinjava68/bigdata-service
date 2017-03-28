@@ -136,12 +136,12 @@
        <property name="mapperLocations" value="classpath*:cn/com/enersun/data_center/bigdata_service/mapper/*.xml" /> 
     </bean>  
     <!-- DAO接口所在包名，Spring会自动查找其下的类, 扫描mybatis映射接口类 --> 
-    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+    <bean id="mybatisConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
         <property name="basePackage" value="cn.com.enersun.data_center.bigdata_service.dao" />
         <property name="sqlSessionFactoryBeanName" value="SqlSessionFactory" />
     </bean>
       
-    <!-- 使用annotation 自动注册bean, 并保证@Required、@Autowired的属性被注入   -->
+    <!-- 使用annotation 自动注册bean, 并保证@component,@service,@Repository,@Required,@Autowired的属性被注入   -->
    <context:component-scan base-package="cn.com.enersun.data_center.bigdata_service.dao">
     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
      </context:component-scan>

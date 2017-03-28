@@ -1,24 +1,22 @@
 package cn.com.enersun.data_center.bigdata_service.serviceImp;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 
 import org.apache.commons.collections.map.CaseInsensitiveMap;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 
 import cn.com.enersun.data_center.bigdata_service.MicroParameterService;
 import cn.com.enersun.data_center.bigdata_service.common.util.jsonUtils.JSONTransKeyTools;
 import cn.com.enersun.data_center.bigdata_service.constant.BaseParamFieldConstant;
-import cn.com.enersun.data_center.bigdata_service.dao.BasicServiceDao;
-import cn.com.enersun.data_center.bigdata_service.dao.MicroParameterServiceDao;
-import cn.com.enersun.data_center.bigdata_service.dao.MicroServiceOrderDao;
+import cn.com.enersun.data_center.bigdata_service.dao.*;
 import cn.com.enersun.data_center.bigdata_service.entity.*;
 
 
@@ -34,20 +32,17 @@ import cn.com.enersun.data_center.bigdata_service.entity.*;
 * @date 2017年3月17日 下午13:26:06 
 * @version V1.0   
 */
-
+@Service
 public class MicroParameterServiceImp implements MicroParameterService {
   
 	
 	@Value("${versionMicroParameterService}")
 	private String versionMicroParameterService;	
 	
-	@Resource(name="microServiceOrderDao")
+	@Autowired
 	private  MicroServiceOrderDao microServiceOrderDao;
 	
-	@Resource(name="basicServiceDao")
-	private  BasicServiceDao basicServiceDao;
-	
-	@Resource(name="microParameterServiceDao")
+	@Autowired
 	private  MicroParameterServiceDao microParameterServiceDao;
 	
 	/**
@@ -108,8 +103,8 @@ public class MicroParameterServiceImp implements MicroParameterService {
 			String sql  = serviceParameter.getSqlStatement();
 			if (sql.isEmpty())
 				return JSON.toJSONString("0");
-			// String转换 JSONObject
-			Map<String, String> map = JsonParse(jsonParams);
+			// json转换map 
+			Map<String, String> map = JSONTransKeyTools.JsonParse(jsonParams);
 			for (int i = 0; i < map.size(); i++) {
 				String param = map.get(String.valueOf(i));
 				if (param.indexOf("delete") > 0 || param.indexOf("inter") > 0)
@@ -216,14 +211,6 @@ public class MicroParameterServiceImp implements MicroParameterService {
 		Map<String ,String> newObjectAttrMap = new CaseInsensitiveMap(wildfireRemoteAttr); 
 		result =transObjectByOutType(maplist,newObjectAttrMap);
 		return result;
-	}
-	
-	private Map<String,String> JsonParse(String jsonParams){
-		
-		 Map<String,String> map = new HashMap<String,String>();
-		 JSONObject jsonObj = new JSONObject(jsonParams);
-		 map = JSONTransKeyTools.transJsonObjectMap(jsonObj);
-		return map;
 	}
 	
 	/**
