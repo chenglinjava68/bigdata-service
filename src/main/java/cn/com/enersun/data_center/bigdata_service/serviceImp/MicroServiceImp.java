@@ -168,51 +168,58 @@ public class MicroServiceImp implements MicroService {
 		if(serviceId != null &&  !"".equals(serviceId) &&  !"".equals(keyCode) && keyCode != null
 				&&  !"".equals(jsonParams) && jsonParams != null){
 			// json转换map 
-			Map<String, String> params = JSONTransKeyTools.JsonParse(jsonParams); 
 			ServiceParameterEntity serviceParameter = microServiceOrderDao.queryDetailServiceStr(serviceId,keyCode);
 			int OutType = serviceParameter.getOutType();
 			String sql  = serviceParameter.getSqlStatement();
+			Map<String, String> params = JSONTransKeyTools.JsonParse(jsonParams); 
+			for (int i = 0; i < params.size(); i++) {
+				String param = params.get(String.valueOf(i));
+				if (param.indexOf("delete") > 0 || param.indexOf("inter") > 0)
+					param = "0";
+				param = param.replaceAll(",", "','");
+				sql = sql.replace("(" + i + ")", "('" + param + "')");
+			}
 			if(sql.isEmpty()) return JSON.toJSONString("0");
 			if ("1004".equals(serviceId)){
-				List<DmDeviceEntity> list = basicServiceDao.queryMainAssetInfoByOrgAndSite(sql,params);
+				List<DmDeviceEntity> list = basicServiceDao.queryMainAssetInfoByOrgAndSite(sql);
 				// JSON转换  
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_DEVICE_ATTR);
 				
 			}else if ("1005".equals(serviceId)){
-				List<DmPartEntity> list = basicServiceDao.queryPartsInfoByOrgAndSite(sql ,params);
+				List<DmPartEntity> list = basicServiceDao.queryPartsInfoByOrgAndSite(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_PARTS_ATTR);
 			}else if ("1009".equals(serviceId)){
-				List<DmDeviceEntity> list = basicServiceDao.queryMainAssetInfoByAssetId(sql,params);
+				List<DmDeviceEntity> list = basicServiceDao.queryMainAssetInfoByAssetId(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_DEVICE_ATTR);
 			}else if ("1010".equals(serviceId)){
-				List<DmPartEntity> list = basicServiceDao.queryPartsInfoByPartId(sql,params);
+				List<DmPartEntity> list = basicServiceDao.queryPartsInfoByPartId(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_PARTS_ATTR);
 			}else if ("1011".equals(serviceId)){
-				List<DmDeviceEntity> list = basicServiceDao.queryMainAssetInfoByClassfiyId(sql,params);
+				List<DmDeviceEntity> list = basicServiceDao.queryMainAssetInfoByClassfiyId(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_DEVICE_ATTR);
 			}else if ("1012".equals(serviceId)){
-				List<LineEntity> list = basicServiceDao.queryLineInfoByOrgcode(sql, params);
+				List<LineEntity> list = basicServiceDao.queryLineInfoByOrgcode(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_LINES_ATTR);
 			}else if ("1013".equals(serviceId)){
-				List<TowerEntity> list = basicServiceDao.queryTowerInfoByOrgcode(sql, params);
+				List<TowerEntity> list = basicServiceDao.queryTowerInfoByOrgcode(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_TOWER_ATTR);
 			}else if ("1014".equals(serviceId)){
-				List<Dm_TransformerEntity> list = basicServiceDao.queryTransformerInfoByParameters(sql, params);
+				List<Dm_TransformerEntity> list = basicServiceDao.queryTransformerInfoByParameters(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_TRANSFORMER_ATTR);
 			}else if ("1015".equals(serviceId)){
-				List<Dm_Current_TransformerEntity> list = basicServiceDao.queryCurrentTransformerByParameters(sql, params);
+				List<Dm_Current_TransformerEntity> list = basicServiceDao.queryCurrentTransformerByParameters(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_CURRENT_TRANSFORMER_ATTR);
 			}else if ("1016".equals(serviceId)){
-				List<Dm_Poten_TransformerEntity> list = basicServiceDao.queryPotenTransformerByParameters(sql, params);
+				List<Dm_Poten_TransformerEntity> list = basicServiceDao.queryPotenTransformerByParameters(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_POTEN_TRANSFORMER_ATTR);
 			}else if ("1017".equals(serviceId)){
-				List<Dm_BreakerEntity> list = basicServiceDao.queryBreakerByParameters(sql, params);
+				List<Dm_BreakerEntity> list = basicServiceDao.queryBreakerByParameters(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_ISOLATOR_SWITCH_ATTR);
 			}else if ("1018".equals(serviceId)){
-				List<Dm_Isolator_SwitchEntity> list = basicServiceDao.queryIsolatorSwitchByParameters(sql, params);
+				List<Dm_Isolator_SwitchEntity> list = basicServiceDao.queryIsolatorSwitchByParameters(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_BREAKER_ATTR);
 			}else if ("1019".equals(serviceId)){
-				List<Dm_FuseEntity> list = basicServiceDao.queryFuseByParameters(sql, params);
+				List<Dm_FuseEntity> list = basicServiceDao.queryFuseByParameters(sql);
 				result = transObjectByOutType(list, OutType,FieldConstant.DM_FUSE_ATTR);
 			
 			}else{

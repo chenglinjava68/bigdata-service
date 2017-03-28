@@ -36,147 +36,74 @@
  
   <!-- 通过设备供电局编码和变电站名称，查询一二次设备基本信息 -->
  <select id="queryMainAssetInfoByOrgAndSite" parameterType="string" resultType="DmDeviceEntity">
-  ${param1} 
-   	 <if test="_parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code =#{param2.1}
-      </if>
-      <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and ll.site_name = #{param2.2}
-      </if>
-         <if test="_parameter.containsKey(3) != null and _parameter.containsKey(3) !='' ">
-   			and c.full_name like #{param2.3}
-      </if>
-
+ 	${value}
  </select>
   
   <!-- 通过设备供电局编码和变电站名称，查询一二次部件基本信息 -->
  <select id="queryPartsInfoByOrgAndSite" parameterType="string" resultType="DmPartEntity">
-   ${param1} 
-   	 <if test="_parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
-      <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and l.site_name =#{param2.2}
-      </if>
-         <if test="_parameter.containsKey(3) != null and _parameter.containsKey(3) !='' ">
-   			and c.full_name  like #{param2.3}
-      </if>
+  ${value}
  </select>
  
   <!-- 通过设备ID，查询一二次设备基本信息 -->
  <select id="queryMainAssetInfoByAssetId" parameterType="string" resultType="DmDeviceEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.id =#{param2.1}
-      </if>
+  ${value}
  </select>
  
    <!-- 通过设备ID，查询一二次部件基本信息 -->
  <select id="queryPartsInfoByPartId" parameterType="string" resultType="DmPartEntity">
-   ${param1} 
-   	 <if test="_parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.id =#{param2.1}
-      </if>
+   ${value}
  </select>
  
   <!-- 通过设备分类编码，查询设备基本信息 -->
  <select id="queryMainAssetInfoByClassfiyId" parameterType="string" resultType="DmDeviceEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.classify_id in ${param2.1}
-      </if>
+  ${value}
  </select>
  
   <!-- mapping2 -->
    <!-- 通过供电局编码，查询线路基本信息含技术参数 -->
  <select id="queryLineInfoByOrgcode" parameterType="string" resultType="LineEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
-        <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and a.id = #{param2.2}
-      </if>
+   ${value}
  </select>
  
   <!-- mapping3 -->
    <!-- 通过供电局编码，查询杆塔基本信息含技术参数-->
  <select id="queryTowerInfoByOrgcode" parameterType="string" resultType="TowerEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
+  ${value}
  </select>
  
  <!-- mapping4 -->
    <!-- 通过供电局编码或者设备ID，查询变压器技术参数信息-->
  <select id="queryTransformerInfoByParameters" parameterType="string" resultType="Dm_TransformerEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
-       <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and a.id = #{param2.2}
-      </if>
+  ${value}
  </select>
  
  <!-- mapping5 -->
    <!-- 通过供电局编码，查询杆塔基本信息含技术参数-->
  <select id="queryCurrentTransformerByParameters" parameterType="string" resultType="Dm_Current_TransformerEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
-        <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and a.id = #{param2.2}
-      </if>
+  ${value}
  </select>
  
  <!-- mapping6 -->
    <!-- 通过供电局编码或者设备ID，查询电压互感器技术参数信息-->
  <select id="queryPotenTransformerByParameters" parameterType="string" resultType="Dm_Poten_TransformerEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
-        <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and a.id = #{param2.2}
-      </if>
+   ${value}
  </select>
  
   <!-- mapping7 -->
    <!-- 通过供电局编码或者设备ID，查询断路器技术参数信息-->
  <select id="queryBreakerByParameters" parameterType="string" resultType="Dm_BreakerEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
-        <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and a.id = #{param2.2}
-      </if>
+  ${value}
  </select>
  
   <!-- mapping8 -->
    <!-- 通过供电局编码或者设备ID，查询隔离开关技术参数信息-->
  <select id="queryIsolatorSwitchByParameters" parameterType="string" resultType="Dm_Isolator_SwitchEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
-        <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and a.id = #{param2.2}
-      </if>
+   ${value}
  </select>
  
   <!-- mapping9 -->
    <!-- 通过供电局编码或者设备ID，查询熔断器技术参数信息-->
  <select id="queryFuseByParameters" parameterType="string" resultType="Dm_FuseEntity">
-   ${param1} 
-   	 <if test=" _parameter.containsKey(1) != null and _parameter.containsKey(1) !='' ">
-  			and a.bureau_code= #{param2.1}
-      </if>
-        <if test="_parameter.containsKey(2) != null and _parameter.containsKey(2) !='' ">
-		   and a.id = #{param2.2}
-      </if>
+   ${value}
  </select>
 </mapper>

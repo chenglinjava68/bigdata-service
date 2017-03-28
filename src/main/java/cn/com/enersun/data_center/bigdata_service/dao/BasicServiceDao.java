@@ -71,24 +71,22 @@ public interface BasicServiceDao {
 	* @Title: queryMainAssetInfoByOrgAndSite 
 	* @Description: TODO(通过设备供电局编码和变电站名称，查询一二次设备基本信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<DmDeviceEntity> queryMainAssetInfoByOrgAndSite(String sql,Map<String, String> params);
+	List<DmDeviceEntity> queryMainAssetInfoByOrgAndSite(String sql);
 	
 	/**
 	 * 
 	* @Title: queryPartsInfoByOrgAndSite 
 	* @Description: TODO(通过设备供电局编码和变电站名称，查询一二次部件基本信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<DmPartEntity> queryPartsInfoByOrgAndSite(String sql,Map<String, String> params);
+	List<DmPartEntity> queryPartsInfoByOrgAndSite(String sql);
 	
 	/**
 	 * 
@@ -99,7 +97,7 @@ public interface BasicServiceDao {
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<DmDeviceEntity> queryMainAssetInfoByAssetId(String sql,Map<String, String> params);
+	List<DmDeviceEntity> queryMainAssetInfoByAssetId(String sql);
 	
 	/**
 	 * 
@@ -111,14 +109,13 @@ public interface BasicServiceDao {
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<DmPartEntity> queryPartsInfoByPartId(String sql,Map<String, String> params);
+	List<DmPartEntity> queryPartsInfoByPartId(String sql);
 
 	/**
 	 * 
 	* @Title: queryAssetInfoBySql 
 	* @Description: TODO(通过SQL，查询一二次设备基本信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
@@ -142,60 +139,55 @@ public interface BasicServiceDao {
 	* @Title: queryMainAssetInfoByClassfiyId 
 	* @Description: TODO(通过设备分类编码，查询主设备基本信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<DmDeviceEntity> queryMainAssetInfoByClassfiyId(String sql, Map<String, String> params);
+	List<DmDeviceEntity> queryMainAssetInfoByClassfiyId(String sql);
 	
 	/**
 	 * 
 	* @Title: queryLineInfoByOrgcode 
 	* @Description: TODO(通过供电局编码或者线路ID，查询线路基本信息含技术参数) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<LineEntity> queryLineInfoByOrgcode(String sql, Map<String, String> params);
+	List<LineEntity> queryLineInfoByOrgcode(String sql);
 	
 	/**
 	 * 
 	* @Title: queryTowerInfoByOrgcode 
 	* @Description: TODO(通过供电局编码或者杆塔ID，，查询杆塔基本信息含技术参数) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<TowerEntity> queryTowerInfoByOrgcode(String sql, Map<String, String> params);
+	List<TowerEntity> queryTowerInfoByOrgcode(String sql);
 	
 	/**
 	 * 
 	* @Title: queryTransformerInfoByParameters 
 	* @Description: TODO(通过供电局编码或者设备ID，查询变压器技术参数信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<Dm_TransformerEntity> queryTransformerInfoByParameters(String sql, Map<String, String> params);
+	List<Dm_TransformerEntity> queryTransformerInfoByParameters(String sql);
 	
 	/**
 	 * 
 	* @Title: queryCurrentTransformerByParameters 
 	* @Description: TODO(通过供电局编码或者设备ID，查询电流互感器技术参数信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<Dm_Current_TransformerEntity> queryCurrentTransformerByParameters(String sql, Map<String, String> params);
+	List<Dm_Current_TransformerEntity> queryCurrentTransformerByParameters(String sql);
 	
 	
 	/**
@@ -203,36 +195,33 @@ public interface BasicServiceDao {
 	* @Title: queryPotenTransformerByParameters 
 	* @Description: TODO(通过供电局编码或者设备ID，查询电压互感器技术参数信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<Dm_Poten_TransformerEntity> queryPotenTransformerByParameters(String sql, Map<String, String> params);
+	List<Dm_Poten_TransformerEntity> queryPotenTransformerByParameters(String sql);
 	
 	/**
 	 * 
 	* @Title: queryBreakerByParameters 
 	* @Description: TODO(通过供电局编码或者设备ID，查询断路器技术参数信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<Dm_BreakerEntity> queryBreakerByParameters(String sql, Map<String, String> params);
+	List<Dm_BreakerEntity> queryBreakerByParameters(String sql);
 	
 	/**
 	 * 
 	* @Title: queryIsolatorSwitchByParameters 
 	* @Description: TODO(通过供电局编码或者设备ID，查询隔离开关技术参数信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<Dm_Isolator_SwitchEntity> queryIsolatorSwitchByParameters(String sql, Map<String, String> params);
+	List<Dm_Isolator_SwitchEntity> queryIsolatorSwitchByParameters(String sql);
 	
 	
 	/**
@@ -240,12 +229,11 @@ public interface BasicServiceDao {
 	* @Title: queryTowerInfoByOrgcode 
 	* @Description: TODO(通过供电局编码或者设备ID，查询熔断器技术参数信息) 
 	* @param @param sql
-	* @param @param Map<String, String> params 参数
 	* @param @return    设定文件 
 	* @return List    返回类型 
 	* @throws
 	 */
-	List<Dm_FuseEntity> queryFuseByParameters(String sql, Map<String, String> params);
+	List<Dm_FuseEntity> queryFuseByParameters(String sql);
 	
 	
 }
