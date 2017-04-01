@@ -498,7 +498,7 @@ public class MonitorServiceImp implements MonitorService{
 					//"100000000000016833781009920160408074800"
 				    endkey = new StringBuilder(key).append(attrId).append(endTime).toString();
 					try {
-						valuesMap = themeParamValueClient.getValuesByKey(startkey,endkey,limitrow);
+						valuesMap = themeParamValueClient.getLastValuesByKey(startkey,endkey,limitrow);
 						if(valuesMap.isEmpty()) continue;
 						//有序的TreeMap 代替HashMap 
 						Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
@@ -676,7 +676,7 @@ public class MonitorServiceImp implements MonitorService{
 				String unit =attributeAndMonitorList.get(i).getUnit();
 				rowkey = new StringBuilder(themeId).append(attrId).toString(); 
 				try {
-					valuesMap = themeParamValueClient.getValuesByPrefix(rowkey,limitrow);
+					valuesMap = themeParamValueClient.getLastValuesByPrefix(rowkey,limitrow);
 					Monitor monitor = null;
 					if(valuesMap.isEmpty()) continue;
 					Map<String, String> sortedMap = new TreeMap<String, String>(valuesMap);
